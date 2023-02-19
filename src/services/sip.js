@@ -48,6 +48,11 @@ export default class SipClient {
         this.ua.start()
     }
 
+    call(callNumber) {
+        let options = this._getCallConfig(true, true)
+        this.ua.call(`${callNumber}@${import.meta.env.VITE_APP_SIP_WS_URL}`, options)
+    }
+
     answer() {
         let callConfig = this._getCallConfig(false, true);
         let options = {pcConfig: callConfig.pcConfig};
@@ -76,7 +81,25 @@ export default class SipClient {
     }
 
     _setupOutgoingCall() {
-        throw new Error('Не реализована обработка исходящего звонка')
+        this.session.on('progress', e => {
+            console.log('call is in progress');
+        });
+        this.session.on('ended', e => {
+            this._completeSession(e);
+        });
+        this.session.on('failed', e => {
+            this._completeSession(e);
+        });
+        this.session.on('confirmed', e => {
+            console.log('call confirmed');
+            let selfStream = this.session.connection.getLocalStreams()[0];
+            let remoteStream = this.session.connection.getRemoteStreams()[0];
+            // console.log('getSenders', this.session.connection.getSenders())
+            // console.log('getReceivers', this.session.connection.getReceivers())
+
+            if (this.addStreamHandler)
+                this.addStreamHandler(remoteStream, selfStream)
+        });
     }
 
     _setupIncomingCall() {

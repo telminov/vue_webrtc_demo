@@ -52,7 +52,7 @@ export default {
         },
         callHandler(callNumber) {
             console.log('Call Btn clicked', callNumber)
-            // todo
+            this.sipClient.call(callNumber)
         },
         connect(sipUser, callAvailableNumber) {
             this.sipUser = sipUser
@@ -60,7 +60,7 @@ export default {
             this.sipClient = new SipClient(this.sipUser, import.meta.env.VITE_APP_SIP_PASSWORD, false)
             // установка видео-связи
             this.sipClient.addStreamHandler = (remoteStream, selfStream) => {
-                console.debug('addStreamHandler')
+                console.log('addStreamHandler')
                 this.isConnectingProcess = false
                 this.isCollCompleted = false
                 this.isAnswerAvailable = false
@@ -71,7 +71,7 @@ export default {
             }
             // начало сессии (входящий или исходящий звонок)
             this.sipClient.startSessionHandler = (session) => {
-                console.debug('startSessionHandler')
+                console.log('startSessionHandler')
                 this.isNewSession = false
                 this.isCollCompleted = false
                 this.isConnectingProcess = true
@@ -81,7 +81,7 @@ export default {
             }
             // конец сессии
             this.sipClient.completeSessionHandler = () => {
-                console.debug('completeSessionHandler')
+                console.log('completeSessionHandler')
                 this.isHangupAvailable = false
                 this.isAnswerAvailable = false
                 this.isRemoteViewAvailable = false
@@ -89,7 +89,7 @@ export default {
                 this.isCollCompleted = true
             }
             this.sipClient.registrationFailedHandler = () => {
-                console.debug('registrationFailedHandler')
+                console.log('registrationFailedHandler')
                 this.errorMsg = 'Ошибка подключения телефонии'
             }
             this.sipClient.start()
