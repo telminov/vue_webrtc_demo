@@ -9,6 +9,7 @@
     "lint": "eslint webrtc_demo --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore"
   },
   "dependencies": {
+    "jssip": "^3.8.2",
     "pinia": "^2.0.28",
     "vue": "^3.2.45"
   },
